@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
+  SafeAreaView,
+  Platform,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDiagnosis } from '../context/DiagnosisContext';
@@ -167,7 +169,10 @@ export default function DashboardScreen({ navigation }) {
           <Text style={styles.navLabelActive}>Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity 
+          style={styles.navItem}
+          onPress={() => navigation.navigate('History')}
+        >
           <Text style={styles.navIcon}>🕒</Text>
           <Text style={styles.navLabel}>History</Text>
         </TouchableOpacity>
@@ -179,12 +184,18 @@ export default function DashboardScreen({ navigation }) {
           <Text style={styles.navCenterIcon}>+</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity 
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Guide')}
+        >
           <Text style={styles.navIcon}>📖</Text>
           <Text style={styles.navLabel}>Guide</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity 
+          style={styles.navItem}
+          onPress={() => navigation.navigate('Profile')}
+        >
           <Text style={styles.navIcon}>👤</Text>
           <Text style={styles.navLabel}>Profile</Text>
         </TouchableOpacity>
@@ -425,7 +436,8 @@ const styles = StyleSheet.create({
   bottomNav: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    paddingVertical: 12,
+    paddingTop: 12,
+    paddingBottom: Platform.OS === 'ios' ? 35 : 37,
     paddingHorizontal: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

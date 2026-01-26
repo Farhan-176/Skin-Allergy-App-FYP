@@ -15,6 +15,9 @@ import AIProcessingScreen from './screens/AIProcessingScreen';
 import AnalysisScreen from './screens/AnalysisScreen';
 import SelfCarePlanScreen from './screens/SelfCarePlanScreen';
 import DoctorAlertScreen from './screens/DoctorAlertScreen';
+import HistoryScreen from './screens/HistoryScreen';
+import GuideScreen from './screens/GuideScreen';
+import ProfileScreen from './screens/ProfileScreen';
 
 const Stack = createStackNavigator();
 
@@ -40,6 +43,9 @@ export default function App() {
           <Stack.Screen name="Analysis" component={AnalysisScreen} />
           <Stack.Screen name="SelfCarePlan" component={SelfCarePlanScreen} />
           <Stack.Screen name="DoctorAlert" component={DoctorAlertScreen} />
+          <Stack.Screen name="History" component={HistoryScreen} />
+          <Stack.Screen name="Guide" component={GuideScreen} />
+          <Stack.Screen name="Profile" component={ProfileScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </DiagnosisProvider>

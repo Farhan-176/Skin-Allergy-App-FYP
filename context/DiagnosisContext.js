@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const DiagnosisContext = createContext();
 
@@ -48,6 +49,37 @@ export const DiagnosisProvider = ({ children }) => {
     return diagnosisData.severity >= 4 || diagnosisData.confidence < 0.6;
   };
 
+  const saveDiagnosisToHistory = async () => {
+    try {
+      const historyItem = {
+        id: Date.now().toString(),
+        condition: diagnosisData.condition,
+        date: new Date().toISOString(),
+        severity: diagnosisData.severity,
+        painLevel: diagnosisData.painLevel,
+        duration: diagnosisData.duration,
+        symptoms: diagnosisData.symptoms,
+        confidence: diagnosisData.confidence,
+        imageUri: diagnosisData.imageUri,
+      };
+
+      // Get existing history
+      const historyData = await AsyncStorage.getItem('diagnosisHistory');
+      const history = historyData ? JSON.parse(historyData) : [];
+
+      // Add new item to the beginning
+      history.unshift(historyItem);
+
+      // Save updated history
+      await AsyncStorage.setItem('diagnosisHistory', JSON.stringify(history));
+      
+      return true;
+    } catch (error) {
+      console.error('Error saving diagnosis to history:', error);
+      return false;
+    }
+  };
+
   return (
     <DiagnosisContext.Provider
       value={{
@@ -55,6 +87,7 @@ export const DiagnosisProvider = ({ children }) => {
         updateDiagnosisData,
         resetDiagnosisData,
         shouldShowDoctorAlert,
+        saveDiagnosisToHistory,
       }}
     >
       {children}

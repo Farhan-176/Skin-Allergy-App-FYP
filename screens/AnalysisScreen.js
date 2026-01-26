@@ -12,7 +12,7 @@ import {
 import { useDiagnosis } from '../context/DiagnosisContext';
 
 export default function AnalysisScreen({ navigation }) {
-  const { diagnosisData, updateDiagnosisData, shouldShowDoctorAlert } = useDiagnosis();
+  const { diagnosisData, updateDiagnosisData, shouldShowDoctorAlert, saveDiagnosisToHistory } = useDiagnosis();
   
   const [loading, setLoading] = useState(true);
   const [heatmapEnabled, setHeatmapEnabled] = useState(false);
@@ -44,7 +44,10 @@ export default function AnalysisScreen({ navigation }) {
     }, 2000);
   }, []);
 
-  const handleSaveAndFinish = () => {
+  const handleSaveAndFinish = async () => {
+    // Save to history
+    await saveDiagnosisToHistory();
+    
     // Automatically determine navigation based on severity
     if (shouldShowDoctorAlert()) {
       // Severe case - show doctor alert

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,10 +7,88 @@ import {
   ScrollView,
   StatusBar,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDiagnosis } from '../context/DiagnosisContext';
+
+const SKIN_TIPS = [
+  {
+    id: 1,
+    icon: '💧',
+    title: 'Stay Hydrated',
+    description: 'Maintain your skin\'s natural barrier by drinking at least 8 glasses of water. Avoid fragrance-heavy soaps during active flare-ups.',
+  },
+  {
+    id: 2,
+    icon: '☀️',
+    title: 'Sun Protection',
+    description: 'Apply broad-spectrum SPF 30+ sunscreen daily, even on cloudy days. UV exposure can worsen many skin conditions and accelerate aging.',
+  },
+  {
+    id: 3,
+    icon: '🥗',
+    title: 'Eat Antioxidants',
+    description: 'Include foods rich in vitamins C and E like berries, nuts, and leafy greens. These help protect your skin from damage and promote healing.',
+  },
+  {
+    id: 4,
+    icon: '😴',
+    title: 'Quality Sleep',
+    description: 'Get 7-9 hours of sleep nightly. Your skin repairs itself during sleep, making rest essential for a healthy complexion.',
+  },
+  {
+    id: 5,
+    icon: '🧴',
+    title: 'Moisturize Daily',
+    description: 'Apply moisturizer within 3 minutes after bathing to lock in moisture. Choose fragrance-free products for sensitive skin.',
+  },
+  {
+    id: 6,
+    icon: '🚿',
+    title: 'Gentle Cleansing',
+    description: 'Use lukewarm water and mild cleansers. Hot water and harsh soaps strip natural oils, leading to dryness and irritation.',
+  },
+  {
+    id: 7,
+    icon: '🧘',
+    title: 'Manage Stress',
+    description: 'Practice stress-reduction techniques like meditation or yoga. Stress hormones can trigger inflammation and skin flare-ups.',
+  },
+  {
+    id: 8,
+    icon: '🚭',
+    title: 'Avoid Smoking',
+    description: 'Smoking reduces blood flow to the skin, depletes oxygen and nutrients, and breaks down collagen and elastin.',
+  },
+];
 
 export default function DashboardScreen({ navigation }) {
   const { resetDiagnosisData } = useDiagnosis();
+  const [dailyTip, setDailyTip] = useState(SKIN_TIPS[0]);
+  const [userName, setUserName] = useState('User');
+
+  useEffect(() => {
+    // Select a tip based on the day of the year for consistency
+    const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+    const tipIndex = dayOfYear % SKIN_TIPS.length;
+    setDailyTip(SKIN_TIPS[tipIndex]);
+
+    // Load user name from AsyncStorage
+    loadUserName();
+  }, []);
+
+  const loadUserName = async () => {
+    try {
+      const currentUserData = await AsyncStorage.getItem('currentUser');
+      if (currentUserData) {
+        const user = JSON.parse(currentUserData);
+        // Extract first name from full name
+        const firstName = user.fullName ? user.fullName.split(' ')[0] : 'User';
+        setUserName(firstName);
+      }
+    } catch (error) {
+      console.error('Error loading user name:', error);
+    }
+  };
 
   const handleStartScan = () => {
     resetDiagnosisData();
@@ -24,7 +102,7 @@ export default function DashboardScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={styles.greeting}>Hello, User 👋</Text>
+          <Text style={styles.greeting}>Hello, {userName} 👋</Text>
           <Text style={styles.subtitle}>How can we help you today?</Text>
         </View>
         <TouchableOpacity style={styles.profileButton}>
@@ -48,6 +126,22 @@ export default function DashboardScreen({ navigation }) {
             </View>
             <Text style={styles.scanButtonText}>Start Scan</Text>
           </TouchableOpacity>
+        </View>
+
+        {/* Skin Tip of the Day */}
+        <View style={styles.tipSection}>
+          <Text style={styles.sectionTitle}>Skin Tip of the Day</Text>
+          <View style={styles.tipCard}>
+            <View style={styles.tipIconContainer}>
+              <Text style={styles.tipIcon}>{dailyTip.icon}</Text>
+            </View>
+            <View style={styles.tipContent}>
+              <Text style={styles.tipTitle}>{dailyTip.title}</Text>
+              <Text style={styles.tipDescription}>
+                {dailyTip.description}
+              </Text>
+            </View>
+          </View>
         </View>
 
         {/* Quick Actions */}
@@ -257,5 +351,45 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
     color: '#424242',
+  },
+  tipSection: {
+    marginBottom: 24,
+  },
+  tipCard: {
+    backgroundColor: '#E8F5E9',
+    borderRadius: 12,
+    padding: 20,
+    flexDirection: 'row',
+    elevation: 1,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+  },
+  tipIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  tipIcon: {
+    fontSize: 24,
+  },
+  tipContent: {
+    flex: 1,
+  },
+  tipTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#2E7D32',
+    marginBottom: 8,
+  },
+  tipDescription: {
+    fontSize: 14,
+    color: '#424242',
+    lineHeight: 20,
   },
 });

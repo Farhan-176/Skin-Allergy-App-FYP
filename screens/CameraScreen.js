@@ -7,20 +7,19 @@ import {
   Alert,
   StatusBar,
 } from 'react-native';
-import { Camera } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as ImagePicker from 'expo-image-picker';
 import { useDiagnosis } from '../context/DiagnosisContext';
 
 export default function CameraScreen({ navigation }) {
-  const [hasPermission, setHasPermission] = useState(null);
+  const [permission, requestPermission] = useCameraPermissions();
   const [camera, setCamera] = useState(null);
   const { updateDiagnosisData } = useDiagnosis();
 
   useEffect(() => {
-    (async () => {
-      const { status } = await Camera.requestCameraPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
+    if (!permission) {
+      requestPermission();
+    }
   }, []);
 
   const takePicture = async () => {
@@ -48,6 +47,7 @@ export default function CameraScreen({ navigation }) {
         }
       } catch (error) {
         Alert.alert('Error', 'Failed to capture image');
+        console.error('Camera error:', error);
       }
     }
   };
@@ -55,7 +55,7 @@ export default function CameraScreen({ navigation }) {
   const pickImage = async () => {
     try {
       const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        mediaTypes: ['images'],
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
@@ -80,10 +80,11 @@ export default function CameraScreen({ navigation }) {
       }
     } catch (error) {
       Alert.alert('Error', 'Failed to pick image');
+      console.error('Image picker error:', error);
     }
   };
 
-  if (hasPermission === null) {
+  if (!permission) {
     return (
       <View style={styles.container}>
         <Text>Requesting camera permission...</Text>
@@ -91,7 +92,7 @@ export default function CameraScreen({ navigation }) {
     );
   }
 
-  if (hasPermission === false) {
+  if (!permission.granted) {
     return (
       <View style={styles.container}>
         <Text style={styles.noPermissionText}>No access to camera</Text>
@@ -122,9 +123,9 @@ export default function CameraScreen({ navigation }) {
       </View>
 
       {/* Camera View */}
-      <Camera
+      <CameraView
         style={styles.camera}
-        type={Camera.Constants.Type.back}
+        facing="back"
         ref={(ref) => setCamera(ref)}
       >
         <View style={styles.cameraOverlay}>
@@ -133,7 +134,7 @@ export default function CameraScreen({ navigation }) {
             Position the affected area within the frame
           </Text>
         </View>
-      </Camera>
+      </CameraView>
 
       {/* Bottom Controls */}
       <View style={styles.controls}>

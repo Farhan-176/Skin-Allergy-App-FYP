@@ -6,8 +6,8 @@
 
 ### AI-Powered Dermatology Assistant
 
-[![React Native](https://img.shields.io/badge/React%20Native-0.74.1-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactnative.dev/)
-[![Expo](https://img.shields.io/badge/Expo-~51.0.0-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
+[![React Native](https://img.shields.io/badge/React%20Native-0.81.5-61DAFB?style=for-the-badge&logo=react&logoColor=white)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-SDK%2054-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![FYP](https://img.shields.io/badge/Final%20Year-Project-purple?style=for-the-badge)](https://github.com)
 
@@ -241,9 +241,9 @@ if (severity >= 4 || confidence <= 60%) {
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| ![React](https://img.shields.io/badge/react-18.2.0-61DAFB?logo=react) | 18.2.0 | UI Framework |
-| ![React Native](https://img.shields.io/badge/react--native-0.74.1-61DAFB?logo=react) | 0.74.1 | Mobile Framework |
-| ![Expo](https://img.shields.io/badge/expo-~51.0.0-000020?logo=expo) | ~51.0.0 | Development Platform |
+| ![React](https://img.shields.io/badge/react-19.1.0-61DAFB?logo=react) | 19.1.0 | UI Framework |
+| ![React Native](https://img.shields.io/badge/react--native-0.81.5-61DAFB?logo=react) | 0.81.5 | Mobile Framework |
+| ![Expo](https://img.shields.io/badge/expo-SDK%2054-000020?logo=expo) | SDK 54 | Development Platform |
 
 ### 🧭 Navigation
 
@@ -267,43 +267,7 @@ if (severity >= 4 || confidence <= 60%) {
 
 ---
 
-## 💡 Key Design Decisions
-
-### 🎯 Screen Selection Rationale
-
-<details>
-<summary><b>❓ Why screen8 over screen3 for Analysis?</b></summary>
-
-- ✅ **Heatmap visualization** - More technically advanced
-- ✅ **Step indicator** - Better UX clarity
-- ✅ **Dual action buttons** - Clearer navigation paths
-- ✅ **Professional design** - Enhanced credibility
-
-</details>
-
-<details>
-<summary><b>❓ Why screen7 over screen2 for Symptom Input?</b></summary>
-
-- ✅ **Dedicated form** - Better usability
-- ✅ **Focus on data entry** - Improved accuracy
-- ✅ **Separation of concerns** - Camera and input separated
-- ✅ **Reduced cognitive load** - Single responsibility principle
-
-</details>
-
-<details>
-<summary><b>❓ Why both screen1 AND screen5 for outcomes?</b></summary>
-
-- ✅ **Conditional logic** - Different medical outcomes require different UIs
-- ✅ **User safety** - Proper guidance based on severity assessment
-- ✅ **Professional responsibility** - Medical disclaimer compliance
-- ✅ **Personalized experience** - Tailored recommendations
-
-</details>
-
----
-
-## 🚧 Future Enhancements
+##  Future Enhancements
 
 <table>
 <tr>
@@ -359,12 +323,12 @@ if (severity >= 4 || confidence <= 60%) {
   </a>
 </p>
 
-**For questions or support related to this FYP project, contact your supervisor.**
+**For questions or support related to this FYP project, contact us.**
 
 ---
 
 ### ⭐ Star this project if you found it helpful!
 
-Made with ❤️ using React Native & Expo
+Made with ❤️ and Help of Usman,Rohail,Wajhat And Kumail Lashari.
 
 </div>

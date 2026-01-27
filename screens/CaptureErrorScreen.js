@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   StatusBar,
 } from 'react-native';
-import { Camera } from 'expo-camera';
+import { CameraView } from 'expo-camera';
 
 export default function CaptureErrorScreen({ navigation }) {
   return (
@@ -14,9 +14,9 @@ export default function CaptureErrorScreen({ navigation }) {
       <StatusBar barStyle="light-content" />
       
       {/* Camera Background (blurred/static) */}
-      <Camera
+      <CameraView
         style={styles.cameraBackground}
-        type={Camera.Constants.Type.back}
+        facing="back"
       />
 
       {/* Dark Overlay */}

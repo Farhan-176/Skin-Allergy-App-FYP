@@ -131,7 +131,11 @@ export default function GuideScreen({ navigation }) {
         <View style={styles.placeholder} />
       </View>
 
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        style={styles.content} 
+        contentContainerStyle={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
         <Text style={styles.welcomeText}>
           Learn how to get the most out of your skin health app
         </Text>
@@ -247,6 +251,9 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 24,
+  },
+  contentContainer: {
+    paddingBottom: 20,
   },
   welcomeText: {
     fontSize: 16,

@@ -107,7 +107,10 @@ export default function DashboardScreen({ navigation }) {
           <Text style={styles.greeting}>Hello, {userName} 👋</Text>
           <Text style={styles.subtitle}>How can we help you today?</Text>
         </View>
-        <TouchableOpacity style={styles.profileButton}>
+        <TouchableOpacity 
+          style={styles.profileButton}
+          onPress={() => navigation.navigate('Profile')}
+        >
           <Text style={styles.profileIcon}>👤</Text>
         </TouchableOpacity>
       </View>

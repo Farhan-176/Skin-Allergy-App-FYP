@@ -67,10 +67,24 @@ const splash = new PNG({ width: 1284, height: 2778 });
 for (let y = 0; y < 2778; y++) {
   for (let x = 0; x < 1284; x++) {
     const idx = (1284 * y + x) << 2;
-    splash.data[idx] = 255;     // R (white)
-    splash.data[idx + 1] = 255; // G
-    splash.data[idx + 2] = 255; // B
-    splash.data[idx + 3] = 255; // A
+    
+    // Add logo in the center (400x400 green square)
+    const logoSize = 400;
+    const logoX = (1284 - logoSize) / 2;
+    const logoY = (2778 - logoSize) / 2;
+    
+    if (x >= logoX && x < logoX + logoSize && 
+        y >= logoY && y < logoY + logoSize) {
+      splash.data[idx] = 76;      // R (green)
+      splash.data[idx + 1] = 175; // G
+      splash.data[idx + 2] = 80;  // B
+      splash.data[idx + 3] = 255; // A
+    } else {
+      splash.data[idx] = 255;     // R (white)
+      splash.data[idx + 1] = 255; // G
+      splash.data[idx + 2] = 255; // B
+      splash.data[idx + 3] = 255; // A
+    }
   }
 }
 fs.writeFileSync(path.join(assetsDir, 'splash.png'), PNG.sync.write(splash));

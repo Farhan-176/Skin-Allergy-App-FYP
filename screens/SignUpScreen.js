@@ -68,9 +68,16 @@ export default function SignUpScreen({ navigation }) {
       // Store current user session
       await AsyncStorage.setItem('currentUser', JSON.stringify(newUser));
 
-      // Account created successfully - automatically sign in and navigate to Dashboard
-      Alert.alert('Success', 'Account created successfully!', [
-        { text: 'OK', onPress: () => navigation.replace('Dashboard') }
+      // Navigate to EditProfile to complete profile information
+      Alert.alert('Success', 'Account created successfully! Please complete your profile.', [
+        { 
+          text: 'OK', 
+          onPress: () => navigation.replace('EditProfile', { 
+            userName: newUser.fullName, 
+            userEmail: newUser.email,
+            isNewUser: true 
+          }) 
+        }
       ]);
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
@@ -203,7 +210,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: 28,
     paddingTop: 60,
     paddingBottom: 40,
   },

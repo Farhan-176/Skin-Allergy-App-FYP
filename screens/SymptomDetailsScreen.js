@@ -253,8 +253,9 @@ const styles = StyleSheet.create({
     paddingTop: 14,
   },
   footer: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingHorizontal: 32,
+    paddingVertical: 20,
+    paddingBottom: 34,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
   },

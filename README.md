@@ -58,11 +58,15 @@ graph TD
 ### 1. 🚪 **Onboarding & Authentication**
 - ✅ **Landing Screen**: Welcome page showcasing app features
 - ✅ **Sign In Screen**: Secure user authentication system
+- ✅ **Sign Up Screen**: New user registration
 
 ### 2. 📊 **Dashboard**
 - 📜 Comprehensive scan history display
 - ⚡ Quick action buttons for easy access
 - 🎯 Start new diagnosis flow instantly
+- 👤 Profile management
+- 📖 Access to guides and help
+- 🔔 Notifications center
 
 ### 3. 🔬 **Diagnosis Wizard (3-Step Process)**
 
@@ -70,6 +74,7 @@ graph TD
 - 📷 Real-time camera view with precision focus frame
 - 🖼️ Gallery image picker as convenient alternative
 - 🎨 Clean, intuitive UI design
+- ⚠️ Error handling with helpful retry options
 
 #### 📝 Step 2: Symptom Details
 - 📊 Severity level slider (1-5 scale)
@@ -78,6 +83,7 @@ graph TD
 - 📋 Additional symptoms description field
 
 #### 🤖 Step 3: AI Analysis & Results
+- ⏳ AI processing screen with engaging animations
 - ⌛ Loading state with AI processing animation
 - 🔥 **Heatmap Visualization Toggle** (Advanced FYP feature)
 - 📈 AI confidence meter (0-100%)
@@ -113,6 +119,31 @@ graph TD
 </tr>
 </table>
 
+### 5. 📱 **Additional Features**
+
+<table>
+<tr>
+<td width="50%">
+
+#### 📚 Information & Support
+- 📖 **Guide Screen**: Comprehensive user tutorials
+- 💬 **Help & Support**: Get assistance
+- ℹ️ **About**: App information
+- 🔒 **Privacy Policy**: Data protection details
+
+</td>
+<td width="50%">
+
+#### 👤 User Management
+- 📊 **History**: View past diagnoses
+- 👤 **Profile**: User information
+- ✏️ **Edit Profile**: Update details
+- 🔔 **Notifications**: Stay updated
+
+</td>
+</tr>
+</table>
+
 ---
 
 ## 📁 Project Structure
@@ -123,17 +154,34 @@ graph TD
 ├── 📄 package.json                    # Dependencies & scripts
 ├── 📄 app.json                        # Expo configuration
 ├── 📄 babel.config.js                 # Babel configuration
+├── 📂 assets/
+│   ├── 🖼️ logo.png                   # App logo
+│   ├── 🎨 icon.png                   # App icon
+│   ├── 🌟 splash.png                 # Splash screen
+│   ├── 🔲 adaptive-icon.png          # Android adaptive icon
+│   └── 🌐 favicon.png                # Web favicon
 ├── 📂 context/
 │   └── 🔄 DiagnosisContext.js        # Global state management
 └── 📂 screens/
-    ├── 🏠 LandingScreen.js           # Landing page
-    ├── 🔐 SignInScreen.js            # Authentication
-    ├── 📊 DashboardScreen.js         # Main dashboard
-    ├── 📸 CameraScreen.js            # Step 1 of wizard
-    ├── 📝 SymptomDetailsScreen.js    # Step 2 of wizard
-    ├── 🤖 AnalysisScreen.js          # Step 3 of wizard
-    ├── 💚 SelfCarePlanScreen.js      # Outcome A - Mild conditions
-    └── 🏥 DoctorAlertScreen.js       # Outcome B - Severe conditions
+    ├── 🏠 LandingScreen.js           # Welcome/landing page
+    ├── 🔐 SignInScreen.js            # User sign in
+    ├── 📝 SignUpScreen.js            # User registration
+    ├── 📊 DashboardScreen.js         # Main dashboard with quick actions
+    ├── 📸 CameraScreen.js            # Camera capture (Step 1)
+    ├── ⚠️ CaptureErrorScreen.js      # Error handling for camera
+    ├── 📋 SymptomDetailsScreen.js    # Symptom input (Step 2)
+    ├── ⏳ AIProcessingScreen.js      # AI processing animation
+    ├── 🤖 AnalysisScreen.js          # AI results & analysis (Step 3)
+    ├── 💚 SelfCarePlanScreen.js      # Mild condition care plan
+    ├── 🏥 DoctorAlertScreen.js       # Severe condition alert
+    ├── 📜 HistoryScreen.js           # Diagnosis history
+    ├── 📖 GuideScreen.js             # User guide & tutorials
+    ├── 👤 ProfileScreen.js           # User profile
+    ├── ✏️ EditProfileScreen.js       # Edit profile information
+    ├── 🔔 NotificationsScreen.js     # Notifications center
+    ├── 🔒 PrivacyScreen.js           # Privacy policy
+    ├── 💬 HelpSupportScreen.js       # Help & support
+    └── ℹ️ AboutScreen.js             # About the app
 ```
 
 ---
@@ -157,7 +205,6 @@ Before you begin, ensure you have the following installed:
 <summary><b>Step 1: Install Dependencies</b></summary>
 
 ```bash
-cd "e:\new fyp code"
 npm install
 ```
 
@@ -249,21 +296,23 @@ if (severity >= 4 || confidence <= 60%) {
 
 - **@react-navigation/native**: ^6.1.9 - Navigation container
 - **@react-navigation/stack**: ^6.3.20 - Stack navigator
+- **react-native-gesture-handler**: ~2.28.0 - Touch gestures
+- **react-native-screens**: ~4.16.0 - Screen optimization
+- **react-native-safe-area-context**: ~5.6.0 - Safe area handling
 
 ### 🎨 UI Components
 
-- **@react-native-community/slider**: 4.5.2 - Interactive sliders
-- **react-native-gesture-handler**: ~2.16.1 - Touch gestures
-- **react-native-screens**: ~3.31.1 - Screen optimization
+- **@react-native-community/slider**: 5.0.1 - Interactive sliders
+- **expo-status-bar**: ~3.0.9 - Status bar styling
 
 ### 📱 Device Features
 
-- **expo-camera**: ~15.0.5 - Camera integration
-- **expo-image-picker**: ~15.0.4 - Gallery access
+- **expo-camera**: ~17.0.10 - Camera integration
+- **expo-image-picker**: ~17.0.10 - Gallery access
 
 ### 💾 Storage
 
-- **@react-native-async-storage/async-storage**: 1.23.1 - Local data storage
+- **@react-native-async-storage/async-storage**: 2.2.0 - Local data storage
 
 ---
 

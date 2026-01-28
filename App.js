@@ -18,6 +18,11 @@ import DoctorAlertScreen from './screens/DoctorAlertScreen';
 import HistoryScreen from './screens/HistoryScreen';
 import GuideScreen from './screens/GuideScreen';
 import ProfileScreen from './screens/ProfileScreen';
+import EditProfileScreen from './screens/EditProfileScreen';
+import NotificationsScreen from './screens/NotificationsScreen';
+import PrivacyScreen from './screens/PrivacyScreen';
+import HelpSupportScreen from './screens/HelpSupportScreen';
+import AboutScreen from './screens/AboutScreen';
 
 const Stack = createStackNavigator();
 
@@ -46,6 +51,11 @@ export default function App() {
           <Stack.Screen name="History" component={HistoryScreen} />
           <Stack.Screen name="Guide" component={GuideScreen} />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="EditProfile" component={EditProfileScreen} />
+          <Stack.Screen name="Notifications" component={NotificationsScreen} />
+          <Stack.Screen name="Privacy" component={PrivacyScreen} />
+          <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
+          <Stack.Screen name="About" component={AboutScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </DiagnosisProvider>

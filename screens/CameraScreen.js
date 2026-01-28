@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -13,7 +13,8 @@ import { useDiagnosis } from '../context/DiagnosisContext';
 
 export default function CameraScreen({ navigation }) {
   const [permission, requestPermission] = useCameraPermissions();
-  const [camera, setCamera] = useState(null);
+  const cameraRef = useRef(null);
+  const [isCameraReady, setIsCameraReady] = useState(false);
   const { updateDiagnosisData } = useDiagnosis();
 
   useEffect(() => {
@@ -22,33 +23,46 @@ export default function CameraScreen({ navigation }) {
     }
   }, []);
 
+  const handleCameraReady = () => {
+    setIsCameraReady(true);
+  };
+
   const takePicture = async () => {
-    if (camera) {
-      try {
-        const photo = await camera.takePictureAsync({
-          quality: 0.8,
-        });
-        
-        // Simulate blurry image detection (random for demo purposes)
-        // In production, you would use actual image analysis
-        const isBlurry = Math.random() < 0.3; // 30% chance of being blurry for demo
-        
-        updateDiagnosisData({
-          imageUri: photo.uri,
-          image: photo,
-        });
-        
-        if (isBlurry) {
-          // Navigate to Capture Error screen
-          navigation.navigate('CaptureError');
-        } else {
-          // Navigate to Step 2: Symptom Details
-          navigation.navigate('SymptomDetails');
-        }
-      } catch (error) {
-        Alert.alert('Error', 'Failed to capture image');
-        console.error('Camera error:', error);
+    if (!isCameraReady) {
+      Alert.alert('Wait', 'Camera is not ready yet');
+      return;
+    }
+
+    if (!cameraRef.current) {
+      Alert.alert('Error', 'Camera is not available. Please try again.');
+      return;
+    }
+    
+    try {
+      const photo = await cameraRef.current.takePictureAsync({
+        quality: 0.8,
+        skipProcessing: true,
+      });
+      
+      // Simulate blurry image detection (random for demo purposes)
+      // In production, you would use actual image analysis
+      const isBlurry = Math.random() < 0.3; // 30% chance of being blurry for demo
+      
+      updateDiagnosisData({
+        imageUri: photo.uri,
+        image: photo,
+      });
+      
+      if (isBlurry) {
+        // Navigate to Capture Error screen
+        navigation.navigate('CaptureError');
+      } else {
+        // Navigate to Step 2: Symptom Details
+        navigation.navigate('SymptomDetails');
       }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to capture image. Please try again.');
+      console.error('Camera error:', error);
     }
   };
 
@@ -126,15 +140,17 @@ export default function CameraScreen({ navigation }) {
       <CameraView
         style={styles.camera}
         facing="back"
-        ref={(ref) => setCamera(ref)}
-      >
-        <View style={styles.cameraOverlay}>
-          <View style={styles.focusFrame} />
-          <Text style={styles.instructionText}>
-            Position the affected area within the frame
-          </Text>
-        </View>
-      </CameraView>
+        ref={cameraRef}
+        onCameraReady={handleCameraReady}
+      />
+
+      {/* Camera Overlay - Must be outside CameraView */}
+      <View style={styles.cameraOverlay}>
+        <View style={styles.focusFrame} />
+        <Text style={styles.instructionText}>
+          Position the affected area within the frame
+        </Text>
+      </View>
 
       {/* Bottom Controls */}
       <View style={styles.controls}>
@@ -169,7 +185,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 50,
     paddingBottom: 16,
-    paddingHorizontal: 20,
+    paddingHorizontal: 28,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   backButton: {
@@ -194,9 +210,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cameraOverlay: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+    pointerEvents: 'none',
   },
   focusFrame: {
     width: 280,
@@ -221,7 +238,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     paddingVertical: 30,
-    paddingHorizontal: 20,
+    paddingHorizontal: 28,
+    paddingBottom: 40,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   galleryIconButton: {

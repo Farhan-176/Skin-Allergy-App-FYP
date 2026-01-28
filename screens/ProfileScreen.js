@@ -44,7 +44,10 @@ export default function ProfileScreen({ navigation }) {
           onPress: async () => {
             try {
               await AsyncStorage.removeItem('currentUser');
-              navigation.replace('Landing');
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Landing' }],
+              });
             } catch (error) {
               console.error('Error signing out:', error);
             }
@@ -54,12 +57,46 @@ export default function ProfileScreen({ navigation }) {
     );
   };
 
+  const handleMenuItemClick = (route, params = {}) => {
+    navigation.navigate(route, params);
+  };
+
   const menuItems = [
-    { id: 1, icon: '👤', title: 'Edit Profile', subtitle: 'Update your personal information' },
-    { id: 2, icon: '🔔', title: 'Notifications', subtitle: 'Manage notification preferences' },
-    { id: 3, icon: '🔒', title: 'Privacy', subtitle: 'Privacy and security settings' },
-    { id: 4, icon: '❓', title: 'Help & Support', subtitle: 'Get help and contact support' },
-    { id: 5, icon: 'ℹ️', title: 'About', subtitle: 'App version and information' },
+    { 
+      id: 'profile', 
+      icon: '👤', 
+      title: 'Edit Profile', 
+      subtitle: 'Update your personal information',
+      route: 'EditProfile',
+    },
+    { 
+      id: 'notifications', 
+      icon: '🔔', 
+      title: 'Notifications', 
+      subtitle: 'Manage notification preferences',
+      route: 'Notifications',
+    },
+    { 
+      id: 'privacy', 
+      icon: '🔒', 
+      title: 'Privacy', 
+      subtitle: 'Privacy and security settings',
+      route: 'Privacy',
+    },
+    { 
+      id: 'help', 
+      icon: '❓', 
+      title: 'Help & Support', 
+      subtitle: 'Get help and contact support',
+      route: 'HelpSupport',
+    },
+    { 
+      id: 'about', 
+      icon: 'ℹ️', 
+      title: 'About', 
+      subtitle: 'App version and information',
+      route: 'About',
+    },
   ];
 
   return (
@@ -93,7 +130,18 @@ export default function ProfileScreen({ navigation }) {
         {/* Menu Items */}
         <View style={styles.menuSection}>
           {menuItems.map((item) => (
-            <TouchableOpacity key={item.id} style={styles.menuItem}>
+            <TouchableOpacity 
+              key={item.id}
+              style={styles.menuItem}
+              onPress={() => {
+                if (item.route) {
+                  const params = item.id === 'profile' ? { userName, userEmail } : {};
+                  handleMenuItemClick(item.route, params);
+                } else if (item.action) {
+                  item.action();
+                }
+              }}
+            >
               <View style={styles.menuIconContainer}>
                 <Text style={styles.menuIcon}>{item.icon}</Text>
               </View>
@@ -110,8 +158,6 @@ export default function ProfileScreen({ navigation }) {
         <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
           <Text style={styles.signOutText}>Sign Out</Text>
         </TouchableOpacity>
-
-        <Text style={styles.versionText}>Version 1.0.0</Text>
       </ScrollView>
 
       {/* Bottom Navigation Bar */}
@@ -191,6 +237,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 24,
     paddingTop: 24,
+    paddingBottom: 120,
   },
   profileCard: {
     backgroundColor: '#FFFFFF',
@@ -279,7 +326,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 32,
     borderWidth: 1,
     borderColor: '#F44336',
   },

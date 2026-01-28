@@ -112,13 +112,6 @@ export default function SelfCarePlanScreen({ navigation }) {
         <TouchableOpacity style={styles.shareButton}>
           <Text style={styles.shareButtonText}>📤 Share Care Plan</Text>
         </TouchableOpacity>
-
-        <TouchableOpacity
-          style={styles.doctorButton}
-          onPress={() => navigation.navigate('Dashboard')}
-        >
-          <Text style={styles.doctorButtonText}>Consult a Specialist</Text>
-        </TouchableOpacity>
       </ScrollView>
 
       {/* Bottom Button */}
@@ -312,8 +305,9 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   footer: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingHorizontal: 32,
+    paddingVertical: 20,
+    paddingBottom: 35,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
   },

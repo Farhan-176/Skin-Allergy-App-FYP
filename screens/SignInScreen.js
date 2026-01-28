@@ -45,8 +45,20 @@ export default function SignInScreen({ navigation }) {
       // Store current user session
       await AsyncStorage.setItem('currentUser', JSON.stringify(user));
       
-      // Successfully signed in
-      navigation.replace('Dashboard');
+      // Check if user has completed their profile (check if at least phone is filled)
+      const isProfileComplete = user.phone && user.phone.trim() !== '';
+      
+      if (!isProfileComplete) {
+        // New user who hasn't completed profile - redirect to profile completion
+        navigation.replace('EditProfile', {
+          userName: user.fullName,
+          userEmail: user.email,
+          isNewUser: true
+        });
+      } else {
+        // Profile is complete - go to Dashboard
+        navigation.replace('Dashboard');
+      }
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again.');
       console.error('Sign in error:', error);
@@ -136,7 +148,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 24,
+    paddingHorizontal: 28,
     paddingTop: 80,
     justifyContent: 'space-between',
     paddingBottom: 40,

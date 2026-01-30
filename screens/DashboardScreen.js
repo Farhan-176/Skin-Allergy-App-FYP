@@ -8,6 +8,8 @@ import {
   StatusBar,
   SafeAreaView,
   Platform,
+  BackHandler,
+  Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDiagnosis } from '../context/DiagnosisContext';
@@ -67,6 +69,7 @@ export default function DashboardScreen({ navigation }) {
   const { resetDiagnosisData } = useDiagnosis();
   const [dailyTip, setDailyTip] = useState(SKIN_TIPS[0]);
   const [userName, setUserName] = useState('User');
+  const [recentScans, setRecentScans] = useState([]);
 
   useEffect(() => {
     // Select a tip based on the day of the year for consistency
@@ -76,7 +79,41 @@ export default function DashboardScreen({ navigation }) {
 
     // Load user name from AsyncStorage
     loadUserName();
-  }, []);
+    
+    // Load recent scans
+    loadRecentScans();
+
+    // Add focus listener to reload scans when returning to dashboard
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadRecentScans();
+    });
+
+    // Handle Android back button
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      Alert.alert(
+        'Logout',
+        'Are you sure you want to logout?',
+        [
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          {
+            text: 'Logout',
+            onPress: () => navigation.replace('SignIn'),
+          },
+        ],
+        { cancelable: true }
+      );
+      return true; // Prevent default behavior
+    });
+
+    return () => {
+      unsubscribe();
+      backHandler.remove();
+    };
+  }, [navigation]);
 
   const loadUserName = async () => {
     try {
@@ -92,13 +129,29 @@ export default function DashboardScreen({ navigation }) {
     }
   };
 
+  const loadRecentScans = async () => {
+    try {
+      const historyData = await AsyncStorage.getItem('diagnosisHistory');
+      if (historyData) {
+        const history = JSON.parse(historyData);
+        // Get only the 3 most recent scans
+        setRecentScans(history.slice(0, 3));
+      } else {
+        setRecentScans([]);
+      }
+    } catch (error) {
+      console.error('Error loading recent scans:', error);
+      setRecentScans([]);
+    }
+  };
+
   const handleStartScan = () => {
     resetDiagnosisData();
     navigation.navigate('Camera');
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" />
       
       {/* Header */}
@@ -110,6 +163,7 @@ export default function DashboardScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.profileButton}
           onPress={() => navigation.navigate('Profile')}
+          accessibilityLabel="Go to profile settings"
         >
           <Text style={styles.profileIcon}>👤</Text>
         </TouchableOpacity>
@@ -125,6 +179,8 @@ export default function DashboardScreen({ navigation }) {
           <TouchableOpacity
             style={styles.scanButton}
             onPress={handleStartScan}
+            accessibilityLabel="Start skin diagnosis scan"
+            accessibilityHint="Opens camera to capture skin photo"
           >
             <View style={styles.scanButtonIcon}>
               <Text style={styles.scanButtonIconText}>+</Text>
@@ -149,25 +205,59 @@ export default function DashboardScreen({ navigation }) {
           </View>
         </View>
 
-        {/* Quick Actions */}
-        <View style={styles.quickActionsSection}>
-          <Text style={styles.sectionTitle}>Quick Actions</Text>
-          <View style={styles.quickActionsGrid}>
-            <TouchableOpacity style={styles.quickActionCard}>
-              <Text style={styles.quickActionIcon}>📚</Text>
-              <Text style={styles.quickActionText}>Learn</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.quickActionCard}>
-              <Text style={styles.quickActionIcon}>🏥</Text>
-              <Text style={styles.quickActionText}>Find Doctor</Text>
+        {/* Recent Scans */}
+        <View style={styles.recentSection}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Recent Scans</Text>
+            <TouchableOpacity 
+              onPress={() => navigation.navigate('History')}
+              accessibilityLabel="View all scan history"
+            >
+              <Text style={styles.seeAllText}>See All →</Text>
             </TouchableOpacity>
           </View>
+          {recentScans.length > 0 ? (
+            recentScans.map((scan) => (
+              <TouchableOpacity 
+                key={scan.id} 
+                style={styles.scanHistoryCard}
+                onPress={() => navigation.navigate('ScanDetail', { scan })}
+                accessibilityLabel={`View details for ${scan.condition} scan`}
+              >
+                <View style={styles.scanHistoryLeft}>
+                  <View style={styles.scanHistoryIcon}>
+                    <Text style={styles.scanHistoryIconText}>🔍</Text>
+                  </View>
+                  <View style={styles.scanHistoryDetails}>
+                    <Text style={styles.scanHistoryCondition}>{scan.condition}</Text>
+                    <Text style={styles.scanHistoryDate}>
+                      {new Date(scan.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </Text>
+                  </View>
+                </View>
+                <View style={[styles.severityBadge, scan.severity <= 2 ? styles.severityLow : styles.severityMedium]}>
+                  <Text style={styles.severityText}>
+                    {scan.severity <= 2 ? 'Mild' : scan.severity <= 4 ? 'Moderate' : 'Severe'}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))
+          ) : (
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyStateIcon}>📊</Text>
+              <Text style={styles.emptyStateText}>No scans yet</Text>
+              <Text style={styles.emptyStateSubtext}>Start your first diagnosis scan above</Text>
+            </View>
+          )}
         </View>
       </ScrollView>
 
       {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
+        <TouchableOpacity 
+          style={styles.navItem}
+          accessibilityLabel="Home - Current screen"
+        >
           <Text style={styles.navIconActive}>🏠</Text>
           <Text style={styles.navLabelActive}>Home</Text>
         </TouchableOpacity>
@@ -175,6 +265,7 @@ export default function DashboardScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.navItem}
           onPress={() => navigation.navigate('History')}
+          accessibilityLabel="View diagnosis history"
         >
           <Text style={styles.navIcon}>🕒</Text>
           <Text style={styles.navLabel}>History</Text>
@@ -183,6 +274,7 @@ export default function DashboardScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.navCenterButton}
           onPress={handleStartScan}
+          accessibilityLabel="Start new skin scan"
         >
           <Text style={styles.navCenterIcon}>+</Text>
         </TouchableOpacity>
@@ -190,6 +282,7 @@ export default function DashboardScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.navItem}
           onPress={() => navigation.navigate('Guide')}
+          accessibilityLabel="View skin care guide"
         >
           <Text style={styles.navIcon}>📖</Text>
           <Text style={styles.navLabel}>Guide</Text>
@@ -198,12 +291,13 @@ export default function DashboardScreen({ navigation }) {
         <TouchableOpacity 
           style={styles.navItem}
           onPress={() => navigation.navigate('Profile')}
+          accessibilityLabel="View your profile"
         >
           <Text style={styles.navIcon}>👤</Text>
           <Text style={styles.navLabel}>Profile</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -214,7 +308,7 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#4CAF50',
-    paddingTop: 60,
+    paddingTop: Platform.OS === 'ios' ? 50 : 40,
     paddingBottom: 20,
     paddingHorizontal: 24,
     flexDirection: 'row',
@@ -245,35 +339,35 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 32,
+    paddingTop: 24,
+    paddingBottom: 20,
   },
   scanCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    padding: 28,
+    padding: 24,
     marginTop: 0,
-    elevation: 6,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    marginBottom: 24,
+    elevation: 4,
+    shadowColor: '#4CAF50',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    marginBottom: 28,
     borderWidth: 2,
     borderColor: '#E8F5E9',
   },
   scanCardTitle: {
-    fontSize: 26,
+    fontSize: 24,
     fontWeight: '800',
-    color: '#2E7D32',
-    marginBottom: 12,
-    letterSpacing: 0.5,
+    color: '#1B5E20',
+    marginBottom: 8,
+    letterSpacing: 0.3,
   },
   scanCardSubtitle: {
-    fontSize: 16,
-    color: '#424242',
-    marginBottom: 24,
-    lineHeight: 24,
-    fontWeight: '500',
+    fontSize: 15,
+    color: '#616161',
+    marginBottom: 20,
+    lineHeight: 22,
   },
   scanButton: {
     flexDirection: 'row',
@@ -373,19 +467,21 @@ const styles = StyleSheet.create({
   },
   quickActionsGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 12,
   },
   quickActionCard: {
-    flex: 1,
+    width: '48%',
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 20,
     alignItems: 'center',
-    elevation: 1,
+    elevation: 2,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+    minHeight: 100,
   },
   quickActionIcon: {
     fontSize: 32,
@@ -436,11 +532,105 @@ const styles = StyleSheet.create({
     color: '#424242',
     lineHeight: 20,
   },
+  recentSection: {
+    marginBottom: 100,
+  },
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+  seeAllText: {
+    fontSize: 14,
+    color: '#4CAF50',
+    fontWeight: '600',
+  },
+  emptyState: {
+    backgroundColor: '#F5F5F5',
+    borderRadius: 12,
+    padding: 32,
+    alignItems: 'center',
+  },
+  emptyStateIcon: {
+    fontSize: 48,
+    marginBottom: 12,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#424242',
+    marginBottom: 4,
+  },
+  emptyStateSubtext: {
+    fontSize: 13,
+    color: '#757575',
+  },
+  scanHistoryCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.08,
+    shadowRadius: 3,
+  },
+  scanHistoryLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  scanHistoryIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#E8F5E9',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  scanHistoryIconText: {
+    fontSize: 24,
+  },
+  scanHistoryDetails: {
+    flex: 1,
+  },
+  scanHistoryCondition: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#212121',
+    marginBottom: 4,
+  },
+  scanHistoryDate: {
+    fontSize: 12,
+    color: '#9E9E9E',
+  },
+  severityBadge: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 12,
+  },
+  severityLow: {
+    backgroundColor: '#E8F5E9',
+  },
+  severityMedium: {
+    backgroundColor: '#FFF3E0',
+  },
+  severityText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#424242',
+  },
   bottomNav: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
     paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 35 : 37,
+    paddingBottom: Platform.OS === 'ios' ? 35 : 25,
     paddingHorizontal: 20,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,

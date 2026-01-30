@@ -23,6 +23,7 @@ import NotificationsScreen from './screens/NotificationsScreen';
 import PrivacyScreen from './screens/PrivacyScreen';
 import HelpSupportScreen from './screens/HelpSupportScreen';
 import AboutScreen from './screens/AboutScreen';
+import ScanDetailScreen from './screens/ScanDetailScreen';
 
 const Stack = createStackNavigator();
 
@@ -56,6 +57,7 @@ export default function App() {
           <Stack.Screen name="Privacy" component={PrivacyScreen} />
           <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
           <Stack.Screen name="About" component={AboutScreen} />
+          <Stack.Screen name="ScanDetail" component={ScanDetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </DiagnosisProvider>

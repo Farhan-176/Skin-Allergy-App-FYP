@@ -6,43 +6,11 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
-  Linking,
 } from 'react-native';
 import { useDiagnosis } from '../context/DiagnosisContext';
 
 export default function DoctorAlertScreen({ navigation }) {
   const { diagnosisData } = useDiagnosis();
-
-  const nearbyDoctors = [
-    {
-      id: 1,
-      name: 'Dr. Sarah Johnson',
-      specialty: 'Dermatologist',
-      rating: 4.8,
-      distance: '2.3 km',
-      phone: '+1-234-567-8900',
-    },
-    {
-      id: 2,
-      name: 'Dr. Michael Chen',
-      specialty: 'Skin Specialist',
-      rating: 4.9,
-      distance: '3.1 km',
-      phone: '+1-234-567-8901',
-    },
-    {
-      id: 3,
-      name: 'Dr. Emily Rodriguez',
-      specialty: 'Dermatologist',
-      rating: 4.7,
-      distance: '4.5 km',
-      phone: '+1-234-567-8902',
-    },
-  ];
-
-  const handleCallDoctor = (phone) => {
-    Linking.openURL(`tel:${phone}`);
-  };
 
   const handleViewCarePlan = () => {
     navigation.navigate('SelfCarePlan');
@@ -116,37 +84,6 @@ export default function DoctorAlertScreen({ navigation }) {
             <Text style={styles.reasonIcon}>🔄</Text>
             <Text style={styles.reasonText}>Follow-up care and monitoring</Text>
           </View>
-        </View>
-
-        {/* Nearby Dermatologists */}
-        <View style={styles.doctorsSection}>
-          <Text style={styles.sectionTitle}>Nearby Dermatologists</Text>
-          
-          {nearbyDoctors.map((doctor) => (
-            <View key={doctor.id} style={styles.doctorCard}>
-              <View style={styles.doctorInfo}>
-                <View style={styles.doctorAvatar}>
-                  <Text style={styles.doctorAvatarText}>
-                    {doctor.name.split(' ').map(n => n[0]).join('')}
-                  </Text>
-                </View>
-                <View style={styles.doctorDetails}>
-                  <Text style={styles.doctorName}>{doctor.name}</Text>
-                  <Text style={styles.doctorSpecialty}>{doctor.specialty}</Text>
-                  <View style={styles.doctorMeta}>
-                    <Text style={styles.doctorRating}>⭐ {doctor.rating}</Text>
-                    <Text style={styles.doctorDistance}>📍 {doctor.distance}</Text>
-                  </View>
-                </View>
-              </View>
-              <TouchableOpacity
-                style={styles.callButton}
-                onPress={() => handleCallDoctor(doctor.phone)}
-              >
-                <Text style={styles.callButtonText}>📞 Call</Text>
-              </TouchableOpacity>
-            </View>
-          ))}
         </View>
 
         {/* Emergency Note */}
@@ -307,83 +244,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#424242',
   },
-  doctorsSection: {
-    marginBottom: 20,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#212121',
-    marginBottom: 16,
-  },
-  doctorCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    borderWidth: 1,
-    borderColor: '#E0E0E0',
-    elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-  },
-  doctorInfo: {
-    flexDirection: 'row',
-    marginBottom: 12,
-  },
-  doctorAvatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: '#4CAF50',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  doctorAvatarText: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
-  doctorDetails: {
-    flex: 1,
-  },
-  doctorName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#212121',
-    marginBottom: 4,
-  },
-  doctorSpecialty: {
-    fontSize: 14,
-    color: '#757575',
-    marginBottom: 8,
-  },
-  doctorMeta: {
-    flexDirection: 'row',
-    gap: 16,
-  },
-  doctorRating: {
-    fontSize: 12,
-    color: '#424242',
-  },
-  doctorDistance: {
-    fontSize: 12,
-    color: '#424242',
-  },
-  callButton: {
-    backgroundColor: '#4CAF50',
-    borderRadius: 8,
-    paddingVertical: 10,
-    alignItems: 'center',
-  },
-  callButtonText: {
-    color: '#FFFFFF',
-    fontSize: 14,
-    fontWeight: '600',
-  },
   emergencyCard: {
     flexDirection: 'row',
     backgroundColor: '#FFEBEE',
@@ -418,7 +278,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     paddingHorizontal: 28,
-    paddingVertical: 16,
+    paddingTop: 16,
+    paddingBottom: 32,
     borderTopWidth: 1,
     borderTopColor: '#E0E0E0',
   },

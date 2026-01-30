@@ -14,9 +14,9 @@ export default function SelfCarePlanScreen({ navigation }) {
 
   const carePlan = {
     treatment: [
-      'Apply hydrocortisone cream 1% twice daily',
-      'Use fragrance-free moisturizer 3-4 times daily',
-      'Take antihistamines if itching persists',
+      'Apply aloe vera gel or coconut oil twice daily',
+      'Use natural, fragrance-free moisturizer 3-4 times daily',
+      'Apply cool chamomile tea compress if itching persists',
       'Avoid hot showers and harsh soaps',
     ],
     doAndDont: {

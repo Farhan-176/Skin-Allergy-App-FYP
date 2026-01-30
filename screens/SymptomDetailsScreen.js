@@ -17,14 +17,20 @@ export default function SymptomDetailsScreen({ navigation }) {
   
   const [severity, setSeverity] = useState(1);
   const [painLevel, setPainLevel] = useState(1);
+  const [itchingLevel, setItchingLevel] = useState(1);
   const [duration, setDuration] = useState('');
+  const [progression, setProgression] = useState('stable');
+  const [isRecurring, setIsRecurring] = useState(null);
   const [symptoms, setSymptoms] = useState('');
 
   const handleContinue = () => {
     updateDiagnosisData({
       severity,
       painLevel,
+      itchingLevel,
       duration,
+      progression,
+      isRecurring,
       symptoms,
     });
     
@@ -42,6 +48,12 @@ export default function SymptomDetailsScreen({ navigation }) {
     if (value <= 2) return 'Minimal';
     if (value <= 4) return 'Moderate';
     return 'Intense';
+  };
+
+  const getItchingLabel = (value) => {
+    if (value <= 2) return 'Minimal';
+    if (value <= 4) return 'Moderate';
+    return 'Severe';
   };
 
   return (
@@ -117,6 +129,29 @@ export default function SymptomDetailsScreen({ navigation }) {
           </View>
         </View>
 
+        {/* Itching Level Slider */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Itching Level</Text>
+          <View style={styles.sliderContainer}>
+            <Text style={[styles.sliderLabel, { color: '#9C27B0' }]}>{getItchingLabel(itchingLevel)}</Text>
+            <Slider
+              style={styles.slider}
+              minimumValue={1}
+              maximumValue={5}
+              step={1}
+              value={itchingLevel}
+              onValueChange={setItchingLevel}
+              minimumTrackTintColor="#9C27B0"
+              maximumTrackTintColor="#E0E0E0"
+              thumbTintColor="#9C27B0"
+            />
+            <View style={styles.sliderLabels}>
+              <Text style={styles.sliderLabelText}>No Itch</Text>
+              <Text style={styles.sliderLabelText}>Severe</Text>
+            </View>
+          </View>
+        </View>
+
         {/* Duration Input */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Duration</Text>
@@ -127,6 +162,50 @@ export default function SymptomDetailsScreen({ navigation }) {
             value={duration}
             onChangeText={setDuration}
           />
+        </View>
+
+        {/* Progression */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Is it getting better or worse?</Text>
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity
+              style={[styles.optionButton, progression === 'better' && styles.optionButtonActive]}
+              onPress={() => setProgression('better')}
+            >
+              <Text style={[styles.optionButtonText, progression === 'better' && styles.optionButtonTextActive]}>↑ Better</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.optionButton, progression === 'stable' && styles.optionButtonActive]}
+              onPress={() => setProgression('stable')}
+            >
+              <Text style={[styles.optionButtonText, progression === 'stable' && styles.optionButtonTextActive]}>→ Same</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.optionButton, progression === 'worse' && styles.optionButtonActive]}
+              onPress={() => setProgression('worse')}
+            >
+              <Text style={[styles.optionButtonText, progression === 'worse' && styles.optionButtonTextActive]}>↓ Worse</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Recurrence */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Have you had this before?</Text>
+          <View style={styles.buttonGroup}>
+            <TouchableOpacity
+              style={[styles.optionButton, styles.wideButton, isRecurring === true && styles.optionButtonActive]}
+              onPress={() => setIsRecurring(true)}
+            >
+              <Text style={[styles.optionButtonText, isRecurring === true && styles.optionButtonTextActive]}>Yes, recurring</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.optionButton, styles.wideButton, isRecurring === false && styles.optionButtonActive]}
+              onPress={() => setIsRecurring(false)}
+            >
+              <Text style={[styles.optionButtonText, isRecurring === false && styles.optionButtonTextActive]}>No, first time</Text>
+            </TouchableOpacity>
+          </View>
         </View>
 
         {/* Symptoms Description */}
@@ -251,6 +330,35 @@ const styles = StyleSheet.create({
   textArea: {
     height: 100,
     paddingTop: 14,
+  },
+  buttonGroup: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  optionButton: {
+    flex: 1,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 12,
+    paddingVertical: 14,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
+  },
+  optionButtonActive: {
+    backgroundColor: '#E8F5E9',
+    borderColor: '#4CAF50',
+  },
+  optionButtonText: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: '#757575',
+  },
+  optionButtonTextActive: {
+    color: '#4CAF50',
+  },
+  wideButton: {
+    flex: 1,
   },
   footer: {
     paddingHorizontal: 32,

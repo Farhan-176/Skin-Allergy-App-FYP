@@ -67,7 +67,7 @@ export default function AIProcessingScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="dark-content" />
       
       {/* Header */}
       <View style={styles.header}>
@@ -151,7 +151,7 @@ export default function AIProcessingScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1A2332',
+    backgroundColor: '#FFFFFF',
   },
   header: {
     paddingTop: 60,
@@ -161,8 +161,8 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#FFFFFF',
-    letterSpacing: 1,
+    color: '#212121',
+    letterSpacing: 0.5,
   },
   stepsContainer: {
     flexDirection: 'row',
@@ -179,38 +179,42 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#2C3E50',
+    backgroundColor: '#F5F5F5',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
+    borderWidth: 2,
+    borderColor: '#E0E0E0',
   },
   stepActive: {
-    backgroundColor: '#2196F3',
-    shadowColor: '#2196F3',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.8,
-    shadowRadius: 10,
-    elevation: 8,
+    backgroundColor: '#E8F5E9',
+    borderColor: '#4CAF50',
+    shadowColor: '#4CAF50',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
   },
   stepCompleted: {
-    backgroundColor: '#34495E',
+    backgroundColor: '#E8F5E9',
+    borderColor: '#4CAF50',
   },
   stepIcon: {
-    fontSize: 20,
+    fontSize: 22,
   },
   stepLabel: {
     fontSize: 11,
-    color: '#7F8C8D',
+    color: '#9E9E9E',
     fontWeight: '600',
     letterSpacing: 0.5,
   },
   stepLabelActive: {
-    color: '#2196F3',
+    color: '#4CAF50',
   },
   stepLine: {
     width: 30,
     height: 2,
-    backgroundColor: '#34495E',
+    backgroundColor: '#E0E0E0',
     marginBottom: 30,
   },
   scanContainer: {
@@ -223,16 +227,16 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 100,
     borderWidth: 3,
-    borderColor: '#2196F3',
+    borderColor: '#4CAF50',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(33, 150, 243, 0.1)',
+    backgroundColor: 'rgba(76, 175, 80, 0.05)',
   },
   scanLine: {
     position: 'absolute',
     width: '100%',
-    height: 2,
-    backgroundColor: '#2196F3',
+    height: 3,
+    backgroundColor: '#4CAF50',
     top: '50%',
   },
   scanInner: {
@@ -240,32 +244,33 @@ const styles = StyleSheet.create({
     height: 160,
     borderRadius: 80,
     borderWidth: 2,
-    borderColor: '#3498DB',
+    borderColor: '#66BB6A',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(52, 152, 219, 0.1)',
+    backgroundColor: 'rgba(76, 175, 80, 0.08)',
   },
   scanCore: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: 'rgba(33, 150, 243, 0.3)',
+    backgroundColor: 'rgba(76, 175, 80, 0.15)',
   },
   statusContainer: {
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 60,
+    paddingHorizontal: 40,
   },
   mainText: {
     fontSize: 18,
-    fontWeight: '600',
-    color: '#FFFFFF',
+    fontWeight: '700',
+    color: '#212121',
     marginBottom: 8,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   subText: {
     fontSize: 14,
-    color: '#95A5A6',
+    color: '#757575',
   },
   progressContainer: {
     paddingHorizontal: 40,
@@ -277,24 +282,24 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   progressLabel: {
-    fontSize: 12,
-    color: '#95A5A6',
+    fontSize: 13,
+    color: '#757575',
   },
   progressPercent: {
-    fontSize: 12,
-    color: '#2196F3',
-    fontWeight: '600',
+    fontSize: 13,
+    color: '#4CAF50',
+    fontWeight: '700',
   },
   progressBar: {
-    height: 4,
-    backgroundColor: '#2C3E50',
-    borderRadius: 2,
+    height: 6,
+    backgroundColor: '#E0E0E0',
+    borderRadius: 3,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#2196F3',
-    borderRadius: 2,
+    backgroundColor: '#4CAF50',
+    borderRadius: 3,
   },
   securityBadge: {
     flexDirection: 'row',
@@ -303,18 +308,20 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 40,
     alignSelf: 'center',
-    backgroundColor: 'rgba(44, 62, 80, 0.8)',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 20,
+    backgroundColor: '#F5F5F5',
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 24,
+    borderWidth: 1,
+    borderColor: '#E0E0E0',
   },
   securityIcon: {
-    fontSize: 14,
+    fontSize: 16,
     marginRight: 8,
   },
   securityText: {
     fontSize: 10,
-    color: '#95A5A6',
+    color: '#616161',
     fontWeight: '600',
     letterSpacing: 1,
   },

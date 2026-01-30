@@ -73,7 +73,12 @@ export default function HistoryScreen({ navigation }) {
           historyData.map((item) => {
             const severityLabel = getSeverityLabel(item.severity);
             return (
-              <TouchableOpacity key={item.id} style={styles.historyCard}>
+              <TouchableOpacity 
+                key={item.id} 
+                style={styles.historyCard}
+                onPress={() => navigation.navigate('ScanDetail', { scan: item })}
+                accessibilityLabel={`View details for ${item.condition} scan`}
+              >
                 <View style={styles.historyCardLeft}>
                   {item.imageUri ? (
                     <Image
